@@ -19,10 +19,10 @@ suite('Functional Tests', function() {
                 .end(function (err, res) {
                     assert.equal(res.status, 200);
                     assert.equal(res.body.initNum, 10);
-                    assert.equal(res.body.initUnit, 'l');
-                    assert.equal(res.body.returnNum, 2.642);
+                    assert.equal(res.body.initUnit, 'L');
+                    assert.equal(res.body.returnNum, 2.64172);
                     assert.equal(res.body.returnUnit, 'gal');
-                    assert.equal(res.body.string, '10 liters converts to 2.642 gallons');
+                    assert.equal(res.body.string, '10 liters converts to 2.64172 gallons');
                     done();
             });
         });
@@ -35,8 +35,8 @@ suite('Functional Tests', function() {
                 .get('/api/convert')
                 .query({ input: '32g' })
                 .end(function (err, res) {
-                    assert.equal(res.status, 400);
-                    assert.equal(res.body.error, 'invalid unit');
+                    assert.equal(res.status, 200);
+                    assert.equal(res.text, 'invalid unit');
                     done();
             });
         });
@@ -49,8 +49,8 @@ suite('Functional Tests', function() {
                 .get('/api/convert')
                 .query({ input: '3/7.2/4kg' })
                 .end(function (err, res) {
-                    assert.equal(res.status, 400);
-                    assert.equal(res.body.error, 'invalid number');
+                    assert.equal(res.status, 200);
+                    assert.equal(res.text, 'invalid number');
                     done();
             });
         });
@@ -63,8 +63,8 @@ suite('Functional Tests', function() {
                 .get('/api/convert')
                 .query({ input: '3/7.2/4kg' })
                 .end(function (err, res) {
-                    assert.equal(res.status, 400);
-                    assert.equal(res.body.error, 'invalid number');
+                    assert.equal(res.status, 200);
+                    assert.equal(res.text, 'invalid number');
                     done();
             });
         });
@@ -80,9 +80,9 @@ suite('Functional Tests', function() {
                     assert.equal(res.status, 200);
                     assert.equal(res.body.initNum, 1);
                     assert.equal(res.body.initUnit, 'kg');
-                    assert.equal(res.body.returnNum, 2.205);
+                    assert.equal(res.body.returnNum, 2.20462);
                     assert.equal(res.body.returnUnit, 'lbs');
-                    assert.equal(res.body.string, '1 kilograms converts to 2.205 pounds');
+                    assert.equal(res.body.string, '1 kilograms converts to 2.20462 pounds');
                     done();
             });
         });

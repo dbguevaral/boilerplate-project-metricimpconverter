@@ -12,7 +12,7 @@ function ConvertHandler() {
     else if (input.includes('.') && !input.includes('/')) { //when string includes a dot, get its decimal part, convert it to number then save it
       regex = /^\d*\.\d+/;
       regexString = /^\d*\.\d+[a-zA-Z]+$/
-      if (!regexString.test(input)) throw new Error("invalid number");
+      if (!regexString.test(input)) return "invalid number";
 
       const num = Number(input.match(regex)[0]);
       result = num;
@@ -22,11 +22,11 @@ function ConvertHandler() {
       regex = /^\d*\.?\d+\/\d*\.?\d+/;
       regexString = /^\d*\.?\d+\/\d*\.?\d+[a-zA-Z]+$/
 
-      if (!regex.test(input)) throw new Error("invalid number"); 
+      if (!regex.test(input)) return "invalid number"; 
       let [numerator, denominator] = input.match(regex)[0].split('/').map(Number);
       
-      if (!regexString.test(input)) throw new Error("invalid number"); 
-      if (denominator === 0 || isNaN(denominator)) throw new Error("invalid number");
+      if (!regexString.test(input)) return "invalid number"; 
+      if (denominator === 0 || isNaN(denominator)) return "invalid number";
 
       const num = numerator / denominator;
       result = num;
@@ -35,7 +35,7 @@ function ConvertHandler() {
     else { //when string start including only numbers and then it can be whatever
       regex = /^\d+/;
       regexString = /^\d+[a-zA-Z]+$/
-      if (!regexString.test(input)) throw new Error("invalid number"); 
+      if (!regexString.test(input)) return "invalid number"; 
       const num = Number(input.match(regex)[0]);
       result = num;
     }
@@ -48,28 +48,28 @@ function ConvertHandler() {
     const units = ["mi", "km", "gal", "l", "lbs", "kg"]; //sets the allowed units for convertion
     const regex = /[a-zA-Z]+$/;
     const match = input.match(regex); //gets the matched part of the string that contains letters
-    if (!match) throw new Error("invalid unit");
+    if (!match) return 'invalid unit';
     const unit = match[0].toLowerCase(); 
 
-    result = units.find( el => el === unit) //looks if the string unit matches any metric/imperial units for later convertion 
-    
-    if (!result) throw new Error('invalid unit')
+    if (!units.includes(unit)) return 'invalid unit';
+
+    result = unit === 'l' ? 'L' : unit;
 
     return result; 
   };
   
   this.getReturnUnit = function(initUnit) {
     let result;
-    const unitMap = { mi: "km", km: "mi", gal: "L", l: "gal", lbs: "kg", kg: "lbs" }; 
-    result = unitMap[initUnit.toLowerCase()]; //maps the unit to then get the converted metric/imperial unit
+    const unitMap = { mi: "km", km: "mi", gal: "L", L: "gal", lbs: "kg", kg: "lbs" }; 
+    result = unitMap[initUnit]; //maps the unit to then get the converted metric/imperial unit
 
     return result;
   };
 
   this.spellOutUnit = function(unit) {
     let result;
-    const unitMap = { mi: "miles", km: "kilometers", gal: "gallons", l: "liters", lbs: "pounds", kg: "kilograms" };
-    result = unitMap[unit.toLowerCase()];
+    const unitMap = { mi: "miles", km: "kilometers", gal: "gallons", L: "liters", lbs: "pounds", kg: "kilograms" };
+    result = unitMap[unit];
     
     return result;
   };
@@ -81,12 +81,12 @@ function ConvertHandler() {
     let result;
 
     switch (initUnit) {
-      case "mi": result = Math.round(initNum * miToKm * 1000) / 1000; break;
-      case "gal": result = Math.round(initNum * galToL* 1000) / 1000; break;
-      case "lbs": result = Math.round(initNum * lbsToKg* 1000) / 1000; break;
-      case "km": result = Math.round(initNum / miToKm* 1000) / 1000; break;
-      case "l": result = Math.round(initNum / galToL* 1000) / 1000; break;
-      case "kg": result = Math.round(initNum / lbsToKg* 1000) / 1000; break;
+      case "mi": result = Math.round(initNum * miToKm * 100000) / 100000; break;
+      case "gal": result = Math.round(initNum * galToL* 100000) / 100000; break;
+      case "lbs": result = Math.round(initNum * lbsToKg* 100000) / 100000; break;
+      case "km": result = Math.round(initNum / miToKm* 100000) / 100000; break;
+      case "L": result = Math.round(initNum / galToL* 100000) / 100000; break;
+      case "kg": result = Math.round(initNum / lbsToKg* 100000) / 100000; break;
     }
     
     return result;

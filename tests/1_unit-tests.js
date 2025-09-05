@@ -29,7 +29,7 @@ suite('Unit Tests', function(){
 
         //#5
         test('convertHandler should correctly return an error on a double-fraction (i.e. 3/2/3)', function () {
-            assert.throws(() => convertHandler.getNum('3/2/3km'), 'invalid number');
+            assert.strictEqual(convertHandler.getNum('3/2/3km'), 'invalid number');
         });
 
         //#6
@@ -37,9 +37,21 @@ suite('Unit Tests', function(){
             assert.strictEqual(convertHandler.getNum('km'), 1);
         });
 
+        //6.5
+        test('convertHandler should correctly read each valid input unit', function () {
+            const validUnits = ["mi", "km", "gal", "l", "lbs", "kg", 'mI', 'Km', 'KM', 'lBs'];
+            validUnits.forEach(unit => {
+                const input = unit;
+                const normalized = input.toLowerCase();
+                const result = convertHandler.getUnit(input);
+                const expected = normalized === 'l' ? 'L' : normalized;
+                assert.strictEqual(result, expected);
+            });  
+        });
+
         //#7
         test('convertHandler should correctly return an error for an invalid input unit', function () {
-            assert.throws(() => convertHandler.getUnit('am'), 'invalid unit');
+            assert.strictEqual(convertHandler.getUnit('am'), 'invalid unit');
         });
 
         //#8
